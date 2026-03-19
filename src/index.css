@@ -1,0 +1,45 @@
+@import "tailwindcss";
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light;
+  background-color: #f3f4f6;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  justify-content: center;
+}
+
+#root {
+  width: 100%;
+  max-width: 430px; /* iPhone 14 Pro Max width */
+  height: 100vh;
+  background: white;
+  overflow-y: auto;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  position: relative;
+}
+
+@theme {
+  --color-santander-red: #ec0000;
+  --color-santander-dark-red: #cc0000;
+  --color-santander-gray: #f5f5f5;
+  --color-santander-dark-gray: #444444;
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
