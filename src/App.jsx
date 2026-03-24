@@ -25,6 +25,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 import santanderLogo from './assets/santander_logo.png';
 import santanderSelectLogo from './assets/Banco_Santander_Select_Logotipo.svg.png';
+import santanderPrivateIcon from './assets/santander_private_icon.png';
 import pixIcon from './assets/pix.png';
 import pixBlackIcon from './assets/pix black.png';
 import emprestimosIcon from './assets/emprestimos.png';
@@ -156,7 +157,7 @@ const HeaderIcons = () => (
 );
 
 // Components
-const HomePage = ({ onNavigate, isSelectMode, onToggleMode, balance }) => {
+const HomePage = ({ onNavigate, isSelectMode, appMode, onToggleMode, balance }) => {
   const [showBalance, setShowBalance] = useState(false);
 
   return (
@@ -173,11 +174,18 @@ const HomePage = ({ onNavigate, isSelectMode, onToggleMode, balance }) => {
               <Menu size={32} strokeWidth={1.5} />
             </button>
             <div className="flex items-center mt-1" onClick={onToggleMode}>
-              <img 
-                src={isSelectMode ? santanderSelectLogo : santanderLogo} 
-                alt="Santander Logo" 
-                className={`${isSelectMode ? 'h-[24px]' : 'h-[22px]'} object-contain cursor-pointer`} 
-              />
+              {appMode === 'private' ? (
+                <div className="flex items-center gap-1.5 cursor-pointer">
+                  <img src={santanderPrivateIcon} alt="Santander Private" className="h-[22px] object-contain filter brightness-0 invert" />
+                  <span className="text-white font-serif text-[18px] tracking-wide" style={{ fontFamily: 'Times New Roman, serif', marginTop: '2px' }}>Private</span>
+                </div>
+              ) : (
+                <img 
+                  src={appMode === 'select' ? santanderSelectLogo : santanderLogo} 
+                  alt="Santander Logo" 
+                  className={`${appMode === 'select' ? 'h-[24px]' : 'h-[22px]'} object-contain cursor-pointer`} 
+                />
+              )}
             </div>
           </div>
           <div className="flex items-center gap-5">
@@ -547,7 +555,7 @@ const DetailPage = ({ transaction, onNavigate, isSelectMode }) => {
   );
 };
 
-const ReceiptPage = ({ transaction, onNavigate, isSelectMode }) => {
+const ReceiptPage = ({ transaction, onNavigate, isSelectMode, appMode }) => {
   const receiptRef = useRef(null);
 
   if (!transaction) return null;
@@ -602,12 +610,19 @@ const ReceiptPage = ({ transaction, onNavigate, isSelectMode }) => {
 
       <div ref={receiptRef} className="flex-1 p-6 overflow-y-auto no-scrollbar py-8 bg-white">
         <div className="flex flex-col items-center mb-8">
-          <img 
-            src={isSelectMode ? santanderSelectLogo : santanderLogo} 
-            alt="Santander Logo" 
-            className={`${isSelectMode ? 'h-[28px]' : 'h-[26px]'} object-contain mb-4`} 
-            style={isSelectMode ? { filter: 'invert(100%)' } : { filter: 'brightness(0) saturate(100%) invert(12%) sepia(95%) saturate(7482%) hue-rotate(359deg) brightness(94%) contrast(117%)' }} 
-          />
+          {appMode === 'private' ? (
+            <div className="flex items-center gap-1.5 mb-4">
+              <img src={santanderPrivateIcon} alt="Santander Private" className="h-[26px] object-contain filter brightness-0" />
+              <span className="text-black font-serif text-[22px] tracking-wide" style={{ fontFamily: 'Times New Roman, serif', marginTop: '2px' }}>Private</span>
+            </div>
+          ) : (
+            <img 
+              src={appMode === 'select' ? santanderSelectLogo : santanderLogo} 
+              alt="Santander Logo" 
+              className={`${appMode === 'select' ? 'h-[28px]' : 'h-[26px]'} object-contain mb-4`} 
+              style={appMode === 'select' ? { filter: 'invert(100%)' } : { filter: 'brightness(0) saturate(100%) invert(12%) sepia(95%) saturate(7482%) hue-rotate(359deg) brightness(94%) contrast(117%)' }} 
+            />
+          )}
           <p className="text-[17px] font-bold text-gray-800 tracking-tight mb-1">Comprovante de transação</p>
           <p className="text-[11px] font-medium text-gray-400">{transaction.receiptDate || transaction.date}</p>
         </div>
@@ -891,9 +906,11 @@ const AdminPage = ({ currentBalance, onUpdateBalance, onAddTransaction, onNaviga
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedTransaction, setSelectedTransaction] = useState(null);
-  const [isSelectMode, setIsSelectMode] = useState(false);
+  const [appMode, setAppMode] = useState('normal'); // 'normal', 'select', 'private'
   const [balance, setBalance] = useState(1250.00);
   const [userTransactions, setUserTransactions] = useState([]);
+
+  const isSelectMode = appMode !== 'normal';
 
   const profileTransactions = useMemo(() => {
     if (balance <= 5000) {
@@ -918,8 +935,10 @@ function App() {
     }
   };
 
-  const toggleSelectMode = () => {
-    setIsSelectMode(!isSelectMode);
+  const toggleMode = () => {
+    if (appMode === 'normal') setAppMode('select');
+    else if (appMode === 'select') setAppMode('private');
+    else setAppMode('normal');
   };
 
   const handleUpdateBalance = (newBalance) => {
@@ -944,8 +963,9 @@ function App() {
           >
             <HomePage 
               onNavigate={handleNavigate} 
-              isSelectMode={isSelectMode} 
-              onToggleMode={toggleSelectMode} 
+              isSelectMode={isSelectMode}
+              appMode={appMode}
+              onToggleMode={toggleMode} 
               balance={balance}
             />
           </motion.div>
@@ -997,6 +1017,7 @@ function App() {
               transaction={selectedTransaction}
               onNavigate={handleNavigate} 
               isSelectMode={isSelectMode}
+              appMode={appMode}
             />
           </motion.div>
         )}
