@@ -32,6 +32,7 @@ body {
   --color-santander-dark-red: #cc0000;
   --color-santander-gray: #f5f5f5;
   --color-santander-dark-gray: #444444;
+  --color-santander-black: #1a1a1a;
 }
 
 @layer utilities {

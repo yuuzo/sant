@@ -21,11 +21,18 @@ import {
   LayoutGrid
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import santanderLogo from './assets/santander_logo.png';
+import santanderSelectLogo from './assets/Banco_Santander_Select_Logotipo.svg.png';
 import pixIcon from './assets/pix.png';
+import pixBlackIcon from './assets/pix black.png';
 import emprestimosIcon from './assets/emprestimos.png';
+import emprestimosBlackIcon from './assets/emprestimos black.png';
 import dindinIcon from './assets/dindin.png';
+import dindinBlackIcon from './assets/dindin black.png';
 import maisAcoesIcon from './assets/mais acoes rapidas.png';
+import maisAcoesBlackIcon from './assets/mais acoes rapidas black.png';
 import inicioIcon from './assets/inicio.png';
 import pagarIcon from './assets/pagar.png';
 import cartoesIcon from './assets/cartoes.png';
@@ -99,13 +106,13 @@ const HeaderIcons = () => (
 );
 
 // Components
-const HomePage = ({ onNavigate }) => {
+const HomePage = ({ onNavigate, isSelectMode, onToggleMode }) => {
   const [showBalance, setShowBalance] = useState(false);
 
   return (
     <div className="flex flex-col h-full bg-white font-sans">
-      {/* Red Header Section */}
-      <div className="bg-santander-red text-white">
+      {/* Header Section */}
+      <div className={`${isSelectMode ? 'bg-[#3b3b3b]' : 'bg-santander-red'} text-white`}>
         {/* Status Bar space / Top Margin */}
         <div className="h-10"></div>
         
@@ -113,8 +120,12 @@ const HomePage = ({ onNavigate }) => {
         <div className="flex justify-between items-center px-4 mb-6">
           <div className="flex items-center gap-4">
             <Menu size={32} strokeWidth={1.5} />
-            <div className="flex items-center mt-1">
-              <img src={santanderLogo} alt="Santander Logo" className="h-[22px] object-contain" />
+            <div className="flex items-center mt-1" onClick={onToggleMode}>
+              <img 
+                src={isSelectMode ? santanderSelectLogo : santanderLogo} 
+                alt="Santander Logo" 
+                className={`${isSelectMode ? 'h-[24px]' : 'h-[22px]'} object-contain cursor-pointer`} 
+              />
             </div>
           </div>
           <div className="flex items-center gap-5">
@@ -139,13 +150,13 @@ const HomePage = ({ onNavigate }) => {
           </div>
           <div className="text-[28px] font-bold mb-1 tracking-tight flex items-center justify-center min-h-[42px]">
             {showBalance ? (
-              'R$ 860,66'
+              'R$ 1.250,00'
             ) : (
-              <span className="text-[28px] blur-[6px] select-none opacity-80">R$ 860,66</span>
+              <span className="text-[28px] blur-[6px] select-none opacity-80">R$ 1.250,00</span>
             )}
           </div>
           <div className="text-[12px] mb-5 font-medium opacity-90">
-            Saldo + limite
+            Saldo + limite R$ 1.350,00
           </div>
           <button 
             onClick={() => onNavigate('extrato')}
@@ -158,26 +169,26 @@ const HomePage = ({ onNavigate }) => {
         {/* Quick Actions Circles */}
         <div className="flex justify-between items-start px-5 pb-8 gap-2">
           <div className="flex flex-col items-center gap-2">
-            <div className="w-[68px] h-[68px] bg-white rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.1)]">
-              <img src={pixIcon} alt="Pix" className="w-[34px] h-[34px] object-contain" />
+            <div className={`w-[68px] h-[68px] ${isSelectMode ? 'bg-[#5c5c5c]' : 'bg-white'} rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.1)]`}>
+              <img src={isSelectMode ? pixBlackIcon : pixIcon} alt="Pix" className="w-[34px] h-[34px] object-contain" />
             </div>
             <span className="text-[13px] font-medium">Pix</span>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <div className="w-[68px] h-[68px] bg-white rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.1)]">
-              <img src={emprestimosIcon} alt="Empréstimos" className="w-[34px] h-[34px] object-contain" />
+            <div className={`w-[68px] h-[68px] ${isSelectMode ? 'bg-[#5c5c5c]' : 'bg-white'} rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.1)]`}>
+              <img src={isSelectMode ? emprestimosBlackIcon : emprestimosIcon} alt="Empréstimos" className="w-[34px] h-[34px] object-contain" />
             </div>
             <span className="text-[13px] font-medium">Empréstimos</span>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <div className="w-[68px] h-[68px] bg-white rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.1)]">
-              <img src={dindinIcon} alt="DinDin" className="w-[34px] h-[34px] object-contain" />
+            <div className={`w-[68px] h-[68px] ${isSelectMode ? 'bg-[#5c5c5c]' : 'bg-white'} rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.1)]`}>
+              <img src={isSelectMode ? dindinBlackIcon : dindinIcon} alt="DinDin" className="w-[34px] h-[34px] object-contain" />
             </div>
-            <span className="text-[13px] font-medium">DinDin</span>
+            <span className="text-[13px] font-medium">Investir</span>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <div className="w-[68px] h-[68px] bg-white rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.1)]">
-              <img src={maisAcoesIcon} alt="Mais ações rápidas" className="w-[34px] h-[34px] object-contain" />
+            <div className={`w-[68px] h-[68px] ${isSelectMode ? 'bg-[#5c5c5c]' : 'bg-white'} rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.1)]`}>
+              <img src={isSelectMode ? maisAcoesBlackIcon : maisAcoesIcon} alt="Mais ações rápidas" className="w-[34px] h-[34px] object-contain" />
             </div>
             <span className="text-[13px] font-medium text-center leading-tight">Mais ações<br/>rápidas</span>
           </div>
@@ -186,22 +197,26 @@ const HomePage = ({ onNavigate }) => {
 
       {/* Main Content Area */}
       <div className="flex-1 bg-[#f0f2f5] p-5 overflow-y-auto no-scrollbar">
-        <h2 className="text-[20px] font-semibold mb-4 text-gray-800 tracking-tight">Importante para você</h2>
-        <div className="bg-white rounded-[16px] p-6 shadow-sm mb-8">
-          <p className="text-[15px] text-gray-700 leading-snug mb-5 font-medium">
-            Tenha mais uma conta em débito automático: cadastre a fatura do cartão.
-          </p>
-          <button className="bg-santander-red text-white px-5 py-2 rounded-full font-bold text-[14px]">
-            Cadastrar agora
-          </button>
-        </div>
+        {!isSelectMode && (
+          <>
+            <h2 className="text-[20px] font-semibold mb-4 text-gray-800 tracking-tight">Importante para você</h2>
+            <div className="bg-white rounded-[16px] p-6 shadow-sm mb-8">
+              <p className="text-[15px] text-gray-700 leading-snug mb-5 font-medium">
+                Tenha mais uma conta em débito automático: cadastre a fatura do cartão.
+              </p>
+              <button className={`${isSelectMode ? 'bg-black' : 'bg-santander-red'} text-white px-5 py-2 rounded-full font-bold text-[14px]`}>
+                Cadastrar agora
+              </button>
+            </div>
+          </>
+        )}
 
         <h2 className="text-[20px] font-semibold mb-4 text-gray-800 tracking-tight">Minhas contas</h2>
         <div className="flex gap-4 overflow-x-auto no-scrollbar pb-6">
           <div className="min-w-[150px] bg-white rounded-[16px] p-5 shadow-sm flex flex-col items-start border border-gray-100">
-             <div className="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center text-santander-red mb-5">
-               <div className="border-[2px] border-santander-red w-6 h-4 rounded-[4px] relative">
-                 <div className="absolute top-0 right-1 w-1.5 h-1 bg-santander-red"></div>
+             <div className={`w-10 h-10 ${isSelectMode ? 'bg-gray-100 text-black' : 'bg-red-50 text-santander-red'} rounded-xl flex items-center justify-center mb-5`}>
+               <div className={`border-[2px] ${isSelectMode ? 'border-black' : 'border-santander-red'} w-6 h-4 rounded-[4px] relative`}>
+                 <div className={`absolute top-0 right-1 w-1.5 h-1 ${isSelectMode ? 'bg-black' : 'bg-santander-red'}`}></div>
                </div>
              </div>
              <div className="w-full h-2 bg-gray-100 rounded-full mb-2"></div>
@@ -219,9 +234,9 @@ const HomePage = ({ onNavigate }) => {
 
       {/* Bottom Nav */}
       <div className="bg-[#f0f2f5] border-t border-gray-200 flex justify-around py-2.5 pb-6">
-        <div className="flex flex-col items-center gap-1 text-santander-red">
+        <div className={`flex flex-col items-center gap-1 ${isSelectMode ? 'text-black' : 'text-santander-red'}`}>
           <div className="w-8 h-8 flex items-center justify-center">
-            <img src={inicioIcon} alt="Início" className="w-[24px] h-[24px] object-contain" />
+            <img src={inicioIcon} alt="Início" className={`w-[24px] h-[24px] object-contain ${isSelectMode ? 'filter grayscale brightness-0' : ''}`} />
           </div>
           <span className="text-[10px] font-semibold">Início</span>
         </div>
@@ -248,7 +263,7 @@ const HomePage = ({ onNavigate }) => {
   );
 };
 
-const ExtratoPage = ({ onNavigate, onSelectTransaction }) => {
+const ExtratoPage = ({ onNavigate, onSelectTransaction, isSelectMode }) => {
   const [showBalance, setShowBalance] = useState(true);
   const [activeDate, setActiveDate] = useState(null);
   const dateHeaderRefs = useRef({});
@@ -298,8 +313,8 @@ const ExtratoPage = ({ onNavigate, onSelectTransaction }) => {
 
   return (
     <div className="flex flex-col h-full bg-white font-sans relative">
-      {/* Red Header */}
-      <div className="bg-santander-red text-white z-20 relative">
+      {/* Header */}
+      <div className={`${isSelectMode ? 'bg-[#3b3b3b]' : 'bg-santander-red'} text-white z-20 relative`}>
         <div className="h-10"></div>
         <div className="px-4 py-2 flex justify-between items-center">
           <button onClick={() => onNavigate('home')} className="p-1 -ml-2">
@@ -334,22 +349,22 @@ const ExtratoPage = ({ onNavigate, onSelectTransaction }) => {
           <div className="flex justify-between items-center mb-6">
             <span className="text-[28px] font-bold text-gray-900 tracking-tight flex items-center min-h-[42px]">
               {showBalance ? (
-                'R$ 860,66'
+                'R$ 1.250,00'
               ) : (
-                <span className="text-[28px] blur-[6px] select-none opacity-80 text-gray-900">R$ 860,66</span>
+                <span className="text-[28px] blur-[6px] select-none opacity-80 text-gray-900">R$ 1.250,00</span>
               )}
             </span>
             <button onClick={() => setShowBalance(!showBalance)}>
-              {showBalance ? <Eye size={26} strokeWidth={1.5} className="text-santander-red" /> : <EyeOff size={26} strokeWidth={1.5} className="text-santander-red" />}
+              {showBalance ? <Eye size={26} strokeWidth={1.5} className={isSelectMode ? 'text-black' : 'text-santander-red'} /> : <EyeOff size={26} strokeWidth={1.5} className={isSelectMode ? 'text-black' : 'text-santander-red'} />}
             </button>
           </div>
           <hr className="mb-4 border-gray-200" />
-          <p className="text-[14px] text-gray-700 mb-2">Saldo + Limite: R$ 1.660,66</p>
-          <button className="text-santander-red text-[14px] mb-8 border-b-[1px] border-santander-red leading-none pb-[2px]">Entenda seu limite</button>
+          <p className="text-[14px] text-gray-700 mb-2">Saldo + Limite: R$ 1.350,00</p>
+          <button className={`${isSelectMode ? 'text-black border-black' : 'text-santander-red border-santander-red'} text-[14px] mb-8 border-b-[1px] leading-none pb-[2px]`}>Entenda seu limite</button>
           
           <div className="flex justify-between items-center text-[12px] text-gray-500 mb-2">
             <span>Última atualização às 23:25:45</span>
-            <button className="flex items-center gap-1.5 text-santander-red font-medium">
+            <button className={`flex items-center gap-1.5 ${isSelectMode ? 'text-black' : 'text-santander-red'} font-medium`}>
               <RefreshCw size={14} strokeWidth={2.5} /> Atualizar
             </button>
           </div>
@@ -406,11 +421,11 @@ const ExtratoPage = ({ onNavigate, onSelectTransaction }) => {
   );
 };
 
-const DetailPage = ({ transaction, onNavigate }) => {
+const DetailPage = ({ transaction, onNavigate, isSelectMode }) => {
   return (
     <div className="flex flex-col h-full bg-white font-sans">
-      {/* Red Header */}
-      <div className="bg-santander-red text-white">
+      {/* Header */}
+      <div className={`${isSelectMode ? 'bg-[#3b3b3b]' : 'bg-santander-red'} text-white`}>
         <div className="h-10"></div>
         <div className="px-4 py-2 flex justify-between items-center">
           <button onClick={() => onNavigate('extrato')} className="p-1 -ml-2">
@@ -447,7 +462,7 @@ const DetailPage = ({ transaction, onNavigate }) => {
       <div className="p-5 mb-6">
         <button 
           onClick={() => onNavigate('comprovante')}
-          className="w-full bg-santander-red text-white py-4 rounded-xl font-bold text-[16px] active:scale-[0.98] transition-transform"
+          className={`w-full ${isSelectMode ? 'bg-[#3b3b3b]' : 'bg-santander-red'} text-white py-4 rounded-xl font-bold text-[16px] active:scale-[0.98] transition-transform`}
         >
           Acessar comprovante
         </button>
@@ -456,23 +471,65 @@ const DetailPage = ({ transaction, onNavigate }) => {
   );
 };
 
-const ReceiptPage = ({ onNavigate }) => {
+const ReceiptPage = ({ onNavigate, isSelectMode }) => {
+  const receiptRef = useRef(null);
+
+  const handleShare = async () => {
+    if (!receiptRef.current) return;
+    
+    try {
+      const canvas = await html2canvas(receiptRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff'
+      });
+      
+      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'px',
+        format: [canvas.width, canvas.height]
+      });
+      
+      pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
+      
+      const pdfBlob = pdf.output('blob');
+      const file = new File([pdfBlob], 'comprovante.pdf', { type: 'application/pdf' });
+      
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          title: 'Comprovante Pix',
+          files: [file]
+        });
+      } else {
+        pdf.save('comprovante.pdf');
+      }
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    }
+  };
+
   return (
     <div className="flex flex-col h-full bg-white font-sans">
-      {/* White Header with Red Icons */}
+      {/* White Header with Red/Black Icons */}
       <div className="bg-white border-b border-gray-100">
         <div className="h-10"></div>
         <div className="px-4 py-2 flex justify-between items-center">
           <button onClick={() => onNavigate('detail')} className="p-1 -ml-2">
-            <ChevronLeft size={36} strokeWidth={2.5} className="text-santander-red" />
+            <ChevronLeft size={36} strokeWidth={2.5} className={isSelectMode ? 'text-black' : 'text-santander-red'} />
           </button>
-          <button className="p-1"><Share2 size={24} strokeWidth={1.5} className="text-santander-red" /></button>
+          <button onClick={handleShare} className="p-1"><Share2 size={24} strokeWidth={1.5} className={isSelectMode ? 'text-black' : 'text-santander-red'} /></button>
         </div>
       </div>
 
-      <div className="flex-1 p-6 overflow-y-auto no-scrollbar py-8">
+      <div ref={receiptRef} className="flex-1 p-6 overflow-y-auto no-scrollbar py-8 bg-white">
         <div className="flex flex-col items-center mb-8">
-          <img src={santanderLogo} alt="Santander Logo" className="h-[26px] object-contain mb-4" style={{ filter: 'brightness(0) saturate(100%) invert(12%) sepia(95%) saturate(7482%) hue-rotate(359deg) brightness(94%) contrast(117%)' }} />
+          <img 
+            src={isSelectMode ? santanderSelectLogo : santanderLogo} 
+            alt="Santander Logo" 
+            className={`${isSelectMode ? 'h-[28px]' : 'h-[26px]'} object-contain mb-4`} 
+            style={isSelectMode ? { filter: 'invert(100%)' } : { filter: 'brightness(0) saturate(100%) invert(12%) sepia(95%) saturate(7482%) hue-rotate(359deg) brightness(94%) contrast(117%)' }} 
+          />
           <p className="text-[17px] font-bold text-gray-800 tracking-tight mb-1">Comprovante do Pix</p>
           <p className="text-[11px] font-medium text-gray-400">21/02/2026 - 14:29:39</p>
         </div>
@@ -550,6 +607,7 @@ const ReceiptPage = ({ onNavigate }) => {
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedTransaction, setSelectedTransaction] = useState(null);
+  const [isSelectMode, setIsSelectMode] = useState(false);
 
   const handleNavigate = (page) => {
     setCurrentPage(page);
@@ -560,6 +618,10 @@ function App() {
       setSelectedTransaction(transaction);
       setCurrentPage('detail');
     }
+  };
+
+  const toggleSelectMode = () => {
+    setIsSelectMode(!isSelectMode);
   };
 
   return (
@@ -574,7 +636,11 @@ function App() {
             transition={{ duration: 0.2, ease: "easeOut" }}
             className="h-full w-full absolute top-0 left-0"
           >
-            <HomePage onNavigate={handleNavigate} />
+            <HomePage 
+              onNavigate={handleNavigate} 
+              isSelectMode={isSelectMode} 
+              onToggleMode={toggleSelectMode} 
+            />
           </motion.div>
         )}
         {currentPage === 'extrato' && (
@@ -589,6 +655,7 @@ function App() {
             <ExtratoPage 
               onNavigate={handleNavigate} 
               onSelectTransaction={handleSelectTransaction}
+              isSelectMode={isSelectMode}
             />
           </motion.div>
         )}
@@ -604,6 +671,7 @@ function App() {
             <DetailPage 
               transaction={selectedTransaction} 
               onNavigate={handleNavigate} 
+              isSelectMode={isSelectMode}
             />
           </motion.div>
         )}
@@ -616,7 +684,10 @@ function App() {
             transition={{ type: "tween", duration: 0.3, ease: "easeOut" }}
             className="h-full w-full absolute top-0 left-0"
           >
-            <ReceiptPage onNavigate={handleNavigate} />
+            <ReceiptPage 
+              onNavigate={handleNavigate} 
+              isSelectMode={isSelectMode}
+            />
           </motion.div>
         )}
       </AnimatePresence>
