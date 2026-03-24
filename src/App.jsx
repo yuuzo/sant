@@ -112,7 +112,7 @@ const HomePage = ({ onNavigate, isSelectMode, onToggleMode }) => {
   return (
     <div className="flex flex-col h-full bg-white font-sans">
       {/* Header Section */}
-      <div className={`${isSelectMode ? 'bg-[#3b3b3b]' : 'bg-santander-red'} text-white`}>
+      <div className={`${isSelectMode ? 'bg-black' : 'bg-santander-red'} text-white`}>
         {/* Status Bar space / Top Margin */}
         <div className="h-10"></div>
         
@@ -169,25 +169,25 @@ const HomePage = ({ onNavigate, isSelectMode, onToggleMode }) => {
         {/* Quick Actions Circles */}
         <div className="flex justify-between items-start px-5 pb-8 gap-2">
           <div className="flex flex-col items-center gap-2">
-            <div className={`w-[68px] h-[68px] ${isSelectMode ? 'bg-[#5c5c5c]' : 'bg-white'} rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.1)]`}>
+            <div className={`w-[68px] h-[68px] bg-white rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.1)]`}>
               <img src={isSelectMode ? pixBlackIcon : pixIcon} alt="Pix" className="w-[34px] h-[34px] object-contain" />
             </div>
             <span className="text-[13px] font-medium">Pix</span>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <div className={`w-[68px] h-[68px] ${isSelectMode ? 'bg-[#5c5c5c]' : 'bg-white'} rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.1)]`}>
+            <div className="w-[68px] h-[68px] bg-white rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.1)]">
               <img src={isSelectMode ? emprestimosBlackIcon : emprestimosIcon} alt="Empréstimos" className="w-[34px] h-[34px] object-contain" />
             </div>
             <span className="text-[13px] font-medium">Empréstimos</span>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <div className={`w-[68px] h-[68px] ${isSelectMode ? 'bg-[#5c5c5c]' : 'bg-white'} rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.1)]`}>
+            <div className="w-[68px] h-[68px] bg-white rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.1)]">
               <img src={isSelectMode ? dindinBlackIcon : dindinIcon} alt="DinDin" className="w-[34px] h-[34px] object-contain" />
             </div>
             <span className="text-[13px] font-medium">Investir</span>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <div className={`w-[68px] h-[68px] ${isSelectMode ? 'bg-[#5c5c5c]' : 'bg-white'} rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.1)]`}>
+            <div className="w-[68px] h-[68px] bg-white rounded-full flex items-center justify-center shadow-[0_4px_15px_rgba(0,0,0,0.1)]">
               <img src={isSelectMode ? maisAcoesBlackIcon : maisAcoesIcon} alt="Mais ações rápidas" className="w-[34px] h-[34px] object-contain" />
             </div>
             <span className="text-[13px] font-medium text-center leading-tight">Mais ações<br/>rápidas</span>
@@ -234,9 +234,9 @@ const HomePage = ({ onNavigate, isSelectMode, onToggleMode }) => {
 
       {/* Bottom Nav */}
       <div className="bg-[#f0f2f5] border-t border-gray-200 flex justify-around py-2.5 pb-6">
-        <div className={`flex flex-col items-center gap-1 ${isSelectMode ? 'text-black' : 'text-santander-red'}`}>
+        <div className="flex flex-col items-center gap-1 text-santander-red">
           <div className="w-8 h-8 flex items-center justify-center">
-            <img src={inicioIcon} alt="Início" className={`w-[24px] h-[24px] object-contain ${isSelectMode ? 'filter grayscale brightness-0' : ''}`} />
+            <img src={inicioIcon} alt="Início" className="w-[24px] h-[24px] object-contain" />
           </div>
           <span className="text-[10px] font-semibold">Início</span>
         </div>
@@ -314,7 +314,7 @@ const ExtratoPage = ({ onNavigate, onSelectTransaction, isSelectMode }) => {
   return (
     <div className="flex flex-col h-full bg-white font-sans relative">
       {/* Header */}
-      <div className={`${isSelectMode ? 'bg-[#3b3b3b]' : 'bg-santander-red'} text-white z-20 relative`}>
+      <div className={`${isSelectMode ? 'bg-black' : 'bg-santander-red'} text-white z-20 relative`}>
         <div className="h-10"></div>
         <div className="px-4 py-2 flex justify-between items-center">
           <button onClick={() => onNavigate('home')} className="p-1 -ml-2">
@@ -425,7 +425,7 @@ const DetailPage = ({ transaction, onNavigate, isSelectMode }) => {
   return (
     <div className="flex flex-col h-full bg-white font-sans">
       {/* Header */}
-      <div className={`${isSelectMode ? 'bg-[#3b3b3b]' : 'bg-santander-red'} text-white`}>
+      <div className={`${isSelectMode ? 'bg-black' : 'bg-santander-red'} text-white`}>
         <div className="h-10"></div>
         <div className="px-4 py-2 flex justify-between items-center">
           <button onClick={() => onNavigate('extrato')} className="p-1 -ml-2">
@@ -462,7 +462,7 @@ const DetailPage = ({ transaction, onNavigate, isSelectMode }) => {
       <div className="p-5 mb-6">
         <button 
           onClick={() => onNavigate('comprovante')}
-          className={`w-full ${isSelectMode ? 'bg-[#3b3b3b]' : 'bg-santander-red'} text-white py-4 rounded-xl font-bold text-[16px] active:scale-[0.98] transition-transform`}
+          className={`w-full ${isSelectMode ? 'bg-black' : 'bg-santander-red'} text-white py-4 rounded-xl font-bold text-[16px] active:scale-[0.98] transition-transform`}
         >
           Acessar comprovante
         </button>
