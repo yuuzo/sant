@@ -906,9 +906,35 @@ const AdminPage = ({ currentBalance, onUpdateBalance, onAddTransaction, onNaviga
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedTransaction, setSelectedTransaction] = useState(null);
-  const [appMode, setAppMode] = useState('normal'); // 'normal', 'select', 'private'
-  const [balance, setBalance] = useState(1250.00);
-  const [userTransactions, setUserTransactions] = useState([]);
+  
+  // Load initial state from localStorage or use defaults
+  const [appMode, setAppMode] = useState(() => {
+    const saved = localStorage.getItem('santander_appMode');
+    return saved || 'normal';
+  });
+  
+  const [balance, setBalance] = useState(() => {
+    const saved = localStorage.getItem('santander_balance');
+    return saved !== null ? parseFloat(saved) : 1250.00;
+  });
+  
+  const [userTransactions, setUserTransactions] = useState(() => {
+    const saved = localStorage.getItem('santander_userTransactions');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Save to localStorage whenever state changes
+  useEffect(() => {
+    localStorage.setItem('santander_appMode', appMode);
+  }, [appMode]);
+
+  useEffect(() => {
+    localStorage.setItem('santander_balance', balance.toString());
+  }, [balance]);
+
+  useEffect(() => {
+    localStorage.setItem('santander_userTransactions', JSON.stringify(userTransactions));
+  }, [userTransactions]);
 
   const isSelectMode = appMode !== 'normal';
 
