@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
   Menu, 
   Search, 
@@ -855,7 +855,71 @@ function App() {
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [isSelectMode, setIsSelectMode] = useState(false);
   const [balance, setBalance] = useState(1250.00);
-  const [transactions, setTransactions] = useState(INITIAL_TRANSACTIONS);
+  const [userTransactions, setUserTransactions] = useState([]);
+
+  const profileTransactions = useMemo(() => {
+    let multiplier = 1;
+    let profile = 1;
+    
+    if (balance <= 5000) {
+      multiplier = 0.8;
+      profile = 1;
+    } else if (balance <= 20000) {
+      multiplier = 3.5;
+      profile = 2;
+    } else {
+      multiplier = 10;
+      profile = 3;
+    }
+
+    return INITIAL_TRANSACTIONS.map(t => {
+      if (t.isTarget) return t; // Keep the fixed 17.700 transaction intact
+
+      let newSubtitle = t.subtitle;
+      let newTitle = t.title;
+
+      const subLower = newSubtitle.toLowerCase();
+      const titleLower = newTitle.toLowerCase();
+
+      if (profile === 3) { // Upper Class (> 20.000)
+        if (subLower.includes('panificadora') || subLower.includes('padaria')) newSubtitle = 'Padaria Artesanal Boutique';
+        if (subLower.includes('lanchonete')) newSubtitle = 'Restaurante Fasano';
+        if (subLower.includes('uber')) newSubtitle = 'Uber Black';
+        if (subLower.includes('vivo')) newSubtitle = 'Vivo Pós Família 200GB';
+        if (subLower.includes('residencial')) newSubtitle = 'Condomínio Alphaville';
+        if (subLower.includes('shopping')) newSubtitle = 'Shopping Iguatemi';
+        if (subLower.includes('bicho feliz')) newSubtitle = 'Petz Estética Animal';
+        if (subLower.includes('portoseg')) newSubtitle = 'Porto Seguro Auto Premium';
+        if (subLower.includes('facebook')) newSubtitle = 'Apple Brasil Services';
+        if (subLower.includes('victornet')) newSubtitle = 'Claro Fibra 1 Giga';
+        if (titleLower.includes('boleto')) newTitle = 'Pagamento de boleto Condomínio/Clube';
+      } else if (profile === 2) { // Middle Class (5.000 - 20.000)
+        if (subLower.includes('panificadora') || subLower.includes('padaria')) newSubtitle = 'Padaria Premium';
+        if (subLower.includes('lanchonete')) newSubtitle = 'Restaurante Outback';
+        if (subLower.includes('uber')) newSubtitle = 'Uber Comfort';
+        if (subLower.includes('vivo')) newSubtitle = 'Vivo Pós 50GB';
+        if (subLower.includes('residencial')) newSubtitle = 'Condomínio Jardins';
+        if (subLower.includes('shopping')) newSubtitle = 'Shopping Morumbi';
+        if (subLower.includes('bicho feliz')) newSubtitle = 'Cobasi Pet Shop';
+        if (subLower.includes('portoseg')) newSubtitle = 'Porto Seguro Auto';
+        if (subLower.includes('facebook')) newSubtitle = 'Amazon Prime';
+        if (subLower.includes('victornet')) newSubtitle = 'Vivo Fibra 500 Mega';
+      } else { // Lower Middle Class (< 5.000)
+        if (subLower.includes('uber')) newSubtitle = 'UberX';
+        if (subLower.includes('vivo')) newSubtitle = 'Vivo Controle';
+        if (subLower.includes('facebook')) newSubtitle = 'Netflix';
+      }
+
+      return {
+        ...t,
+        title: newTitle,
+        subtitle: newSubtitle,
+        amount: parseFloat((t.amount * multiplier).toFixed(2))
+      };
+    });
+  }, [balance]);
+
+  const transactions = [...userTransactions, ...profileTransactions];
 
   const handleNavigate = (page) => {
     setCurrentPage(page);
@@ -877,7 +941,7 @@ function App() {
   };
 
   const handleAddTransaction = (newTransaction) => {
-    setTransactions([newTransaction, ...transactions]);
+    setUserTransactions([newTransaction, ...userTransactions]);
   };
 
   return (
