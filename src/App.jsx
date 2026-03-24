@@ -38,68 +38,106 @@ import pagarIcon from './assets/pagar.png';
 import cartoesIcon from './assets/cartoes.png';
 import chatIcon from './assets/chat.png';
 
-// Mock Data
-const INITIAL_TRANSACTIONS = [
-  { id: 1, type: 'income', title: 'Resg poup - central/internet/app', subtitle: 'De: 2045.60.015997-8', amount: 1500.00, date: 'Hoje', icon: 'blue' },
-  { id: 2, type: 'expense', title: 'Compra cartao deb mc', subtitle: '18/03 99. pop 18mar 15h06', amount: -10.45, date: 'Hoje', icon: 'orange' },
-  { id: 3, type: 'expense', title: 'Pagamento de boleto outros bancos', subtitle: 'Portoseg sa c financ e in', amount: -409.74, date: 'Hoje', icon: 'orange' },
-  { id: 4, type: 'expense', title: 'Pix enviado', subtitle: 'Facebook servicos online', amount: -12.52, date: 'Terça, 17 de março', icon: 'orange' },
-  { id: 5, type: 'expense', title: 'Debito aut. telefone celular', subtitle: 'Vivo movel-sp', amount: -70.00, date: 'Terça, 17 de março', icon: 'orange' },
-  { id: 6, type: 'expense', title: 'Compra cartao deb mc', subtitle: '16/03 paskel lanchonete', amount: -15.00, date: 'Segunda, 16 de março', icon: 'orange' },
-  { id: 7, type: 'expense', title: 'Pagamento de boleto outros bancos', subtitle: 'Victornet telecomunicacao', amount: -99.90, date: 'Segunda, 16 de março', icon: 'orange' },
-  { id: 8, type: 'expense', title: 'Pix enviado', subtitle: 'N f r machine diversoes c', amount: -15.00, date: 'Segunda, 16 de março', icon: 'orange' },
-  { id: 9, type: 'expense', title: 'Pix enviado', subtitle: 'Aac padaria tradicao ltda', amount: -14.00, date: 'Segunda, 16 de março', icon: 'orange' },
-  { id: 10, type: 'expense', title: 'Transferencia para conta poupanca', subtitle: 'Para: 2045.60.015997-8', amount: -370.00, date: 'Terça, 10 de março', icon: 'orange' },
-  { id: 11, type: 'expense', title: 'Pagamento de boleto outros bancos', subtitle: 'Residencial estacao parai', amount: -540.20, date: 'Terça, 10 de março', icon: 'orange' },
-  { id: 12, type: 'income', title: 'Pix recebido', subtitle: 'Neusa nascimento soares', amount: 1000.00, date: 'Terça, 10 de março', icon: 'blue' },
-  { id: 13, type: 'expense', title: 'Compra cartao deb mc', subtitle: '08/03 bicho feliz play', amount: -6.00, date: 'Segunda, 9 de março', icon: 'orange' },
-  { id: 14, type: 'expense', title: 'Compra cartao deb mc', subtitle: '08/03 shopping itaquera l', amount: -15.00, date: 'Segunda, 9 de março', icon: 'orange' },
-  { id: 15, type: 'expense', title: 'Compra cartao deb mc', subtitle: '06/03 uber uber .trip hel', amount: -8.02, date: 'Sexta, 6 de março', icon: 'orange' },
-  { id: 16, type: 'expense', title: 'Compra cartao deb mc', subtitle: '06/03 uber uber .trip hel', amount: -9.96, date: 'Sexta, 6 de março', icon: 'orange' },
-  { id: 17, type: 'expense', title: 'Juros saldo utiliz ate limite', subtitle: 'Periodo: 05/02 a 04/03/26', amount: -14.01, date: 'Quinta, 5 de março', icon: 'orange' },
-  { id: 18, type: 'expense', title: 'Seguro cheque protegido', subtitle: 'Periodo: 05/02 a 04/03/26', amount: -3.17, date: 'Quinta, 5 de março', icon: 'orange' },
-  { id: 19, type: 'income', title: 'Pix recebido', subtitle: 'Wagner rodrigues dos sant', amount: 216.00, date: 'Quinta, 5 de março', icon: 'blue' },
-  { id: 20, type: 'expense', title: 'Pagamento cartao credito bce', subtitle: '05/03 19:40 cartao master', amount: -2172.88, date: 'Quinta, 5 de março', icon: 'orange' },
-  { id: 21, type: 'income', title: 'Resg poup - central/internet/app', subtitle: 'De: 2045.60.015997-8', amount: 1600.00, date: 'Quinta, 5 de março', icon: 'blue' },
-  { id: 22, type: 'income', title: 'Pix recebido', subtitle: 'Irani cardosina morais', amount: 223.00, date: 'Quinta, 5 de março', icon: 'blue' },
-  { id: 23, type: 'expense', title: 'Compra cartao deb mc', subtitle: '05/03 uber uber .trip hel', amount: -12.96, date: 'Quinta, 5 de março', icon: 'orange' },
-  { id: 24, type: 'income', title: 'Remuneracao aplicacao automatica', subtitle: '', amount: 0.01, date: 'Quarta, 4 de março', icon: 'blue' },
-  { id: 25, type: 'expense', title: 'Pix enviado', subtitle: 'Edp sao paulo distribuica', amount: -180.01, date: 'Quarta, 4 de março', icon: 'orange' },
-  { id: 26, type: 'expense', title: 'Pix enviado', subtitle: 'Edp sao paulo distribuica', amount: -218.36, date: 'Quarta, 4 de março', icon: 'orange' },
-  { id: 27, type: 'expense', title: 'Transferencia programada', subtitle: 'Para: 2045.60.015997-8', amount: -1000.00, date: 'Terça, 3 de março', icon: 'orange' },
-  { id: 28, type: 'expense', title: 'Compra cartao deb mc', subtitle: '03/03 panificadora tradic', amount: -11.00, date: 'Terça, 3 de março', icon: 'orange' },
-  { id: 29, type: 'income', title: 'Pix recebido', subtitle: 'Viviane aparecida dos san', amount: 800.00, date: 'Terça, 3 de março', icon: 'blue' },
-  { id: 30, type: 'expense', title: 'Pix enviado', subtitle: 'Fabiano araujo barbosa', amount: -583.25, date: 'Terça, 3 de março', icon: 'orange' },
-  { id: 31, type: 'income', title: 'Pix recebido', subtitle: 'Patricia c p felix', amount: 443.68, date: 'Terça, 3 de março', icon: 'blue' },
-  { id: 32, type: 'expense', title: 'Iof adicional - automatico', subtitle: 'Periodo: 01/02 a 28/02/26', amount: -2.79, date: 'Segunda, 2 de março', icon: 'orange' },
-  { id: 33, type: 'expense', title: 'Iof imposto operacoes financeiras', subtitle: 'Periodo: 01/02 a 28/02/26', amount: -0.52, date: 'Segunda, 2 de março', icon: 'orange' },
-  { id: 34, type: 'income', title: 'Pix recebido', subtitle: 'Daiane santos miranda', amount: 295.00, date: 'Segunda, 2 de março', icon: 'blue' },
-  { id: 35, type: 'expense', title: 'Compra cartao deb mc', subtitle: '27/02 panificadora tradic', amount: -8.00, date: 'Sexta, 27 de fevereiro', icon: 'orange' },
-  { id: 36, type: 'expense', title: 'Compra cartao deb mc', subtitle: '27/02 panificadora tradic', amount: -6.00, date: 'Sexta, 27 de fevereiro', icon: 'orange' },
-  { id: 37, type: 'expense', title: 'Pix enviado', subtitle: 'Daiane santos miranda', amount: -75.00, date: 'Quarta, 25 de fevereiro', icon: 'orange' },
-  { id: 38, type: 'expense', title: 'Pix enviado', subtitle: 'Nicolas robert souza da s', amount: -30.00, date: 'Quarta, 25 de fevereiro', icon: 'orange' },
-  { id: 39, type: 'expense', title: 'Compra cartao deb mc', subtitle: '24/02 99. pop 24fev 09h57', amount: -6.63, date: 'Terça, 24 de fevereiro', icon: 'orange' },
-  { id: 40, type: 'income', title: 'Pix recebido', subtitle: 'Wagner rodrigues dos sant', amount: 300.00, date: 'Terça, 24 de fevereiro', icon: 'blue' },
-  { id: 41, type: 'expense', title: 'Pagamento de boleto outros bancos', subtitle: 'Portoseg sa c financ e in', amount: -400.63, date: 'Segunda, 23 de fevereiro', icon: 'orange' },
-  { id: 42, type: 'income', title: 'Pix recebido', subtitle: 'Wagner rodrigues dos sant', amount: 1000.00, date: 'Segunda, 23 de fevereiro', icon: 'blue' },
-  { id: 43, type: 'expense', title: 'Pix enviado', subtitle: 'Mirian alves dos santos', amount: -20.00, date: 'Segunda, 23 de fevereiro', icon: 'orange' },
-  { id: 44, type: 'expense', title: 'Pix enviado', subtitle: 'Correa silva drogaria e p', amount: -18.30, date: 'Segunda, 23 de fevereiro', icon: 'orange' },
-  { id: 45, type: 'expense', title: 'Compra cartao deb mc', subtitle: '22/02 99. 99inapppaymentc', amount: -8.24, date: 'Segunda, 23 de fevereiro', icon: 'orange' },
-  { id: 46, type: 'expense', title: 'Pix enviado', subtitle: 'Neide batista de souza', amount: -90.00, date: 'Segunda, 23 de fevereiro', icon: 'orange' },
-  { 
-    id: 47, type: 'expense', title: 'Pix enviado', subtitle: 'Twlf assessoria comercial', amount: -17700.00, date: 'Segunda, 23 de fevereiro', icon: 'orange', isTarget: true,
-    fullDate: 'Sabado, 21/02/2026 às 14:29',
-    receiptDate: '21/02/2026 - 14:29:39',
-    receiverName: 'Twlf Assessoria Comercial Ltda',
-    receiverDocument: '63.***.*** /0001-1*',
-    receiverBank: 'Cartos Scd S A',
-    senderName: 'VIVIANE APARECIDA DOS SANTOS',
-    senderDocument: '***.691.138-**',
-    senderBank: '033 - BANCO SANTANDER S.A.',
-    transactionId: 'E9040088820260221172956204964399',
-    postBalance: '-R$ 59,49'
-  },
-  { id: 48, type: 'expense', title: 'Compra cartao deb mc', subtitle: '20/02 stafe bank.rmp pape', amount: -39.00, date: 'Sexta, 20 de fevereiro', icon: 'orange' },
+// Target Transaction (Must be in all profiles)
+const TARGET_TRANSACTION = { 
+  id: 47, type: 'expense', title: 'Pix enviado', subtitle: 'Twlf assessoria comercial', amount: -17700.00, date: 'Segunda, 23 de fevereiro', icon: 'orange', isTarget: true,
+  fullDate: 'Sabado, 21/02/2026 às 14:29',
+  receiptDate: '21/02/2026 - 14:29:39',
+  receiverName: 'Twlf Assessoria Comercial Ltda',
+  receiverDocument: '63.***.*** /0001-1*',
+  receiverBank: 'Cartos Scd S A',
+  senderName: 'VIVIANE APARECIDA DOS SANTOS',
+  senderDocument: '***.691.138-**',
+  senderBank: '033 - BANCO SANTANDER S.A.',
+  transactionId: 'E9040088820260221172956204964399',
+  postBalance: '-R$ 59,49'
+};
+
+// Profile 1: Lower Middle Class (0 - 5.000)
+const TRANSACTIONS_LOWER = [
+  { id: 1, type: 'income', title: 'Pix recebido', subtitle: 'Adiantamento Salário', amount: 1500.00, date: 'Hoje', icon: 'blue' },
+  { id: 2, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Atacadão Supermercado', amount: -450.00, date: 'Hoje', icon: 'orange' },
+  { id: 4, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'UberX', amount: -15.50, date: 'Terça, 17 de março', icon: 'orange' },
+  { id: 5, type: 'expense', title: 'Pagamento de boleto', subtitle: 'Enel Distribuição SP', amount: -120.00, date: 'Terça, 17 de março', icon: 'orange' },
+  { id: 6, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Padaria Pão Quente', amount: -18.00, date: 'Segunda, 16 de março', icon: 'orange' },
+  { id: 7, type: 'expense', title: 'Pagamento de boleto', subtitle: 'Sabesp', amount: -70.00, date: 'Segunda, 16 de março', icon: 'orange' },
+  { id: 8, type: 'expense', title: 'Pix enviado', subtitle: 'João da Silva', amount: -20.00, date: 'Segunda, 16 de março', icon: 'orange' },
+  { id: 10, type: 'expense', title: 'Pagamento de boleto', subtitle: 'Aluguel Residencial', amount: -800.00, date: 'Terça, 10 de março', icon: 'orange' },
+  { id: 12, type: 'income', title: 'Pix recebido', subtitle: 'Maria Souza', amount: 150.00, date: 'Terça, 10 de março', icon: 'blue' },
+  { id: 13, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'McDonald\'s', amount: -45.00, date: 'Segunda, 9 de março', icon: 'orange' },
+  { id: 14, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'UberX', amount: -22.00, date: 'Segunda, 9 de março', icon: 'orange' },
+  { id: 15, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Lanchonete Esquina', amount: -15.00, date: 'Sexta, 6 de março', icon: 'orange' },
+  { id: 16, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Farmácia Pague Menos', amount: -40.00, date: 'Sexta, 6 de março', icon: 'orange' },
+  { id: 17, type: 'income', title: 'Salário', subtitle: 'Empresa LTDA', amount: 1000.00, date: 'Quinta, 5 de março', icon: 'blue' },
+  { id: 18, type: 'expense', title: 'Debito aut. telefone', subtitle: 'Vivo Controle', amount: -55.00, date: 'Quinta, 5 de março', icon: 'orange' },
+  { id: 25, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Netflix', amount: -39.90, date: 'Quarta, 4 de março', icon: 'orange' },
+  { id: 29, type: 'income', title: 'Pix recebido', subtitle: 'Carlos Alberto', amount: 100.00, date: 'Terça, 3 de março', icon: 'blue' },
+  { id: 30, type: 'expense', title: 'Pix enviado', subtitle: 'Mercadinho Bairro', amount: -30.00, date: 'Terça, 3 de março', icon: 'orange' },
+  { id: 32, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Padaria Pão Quente', amount: -12.00, date: 'Segunda, 2 de março', icon: 'orange' },
+  { id: 35, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Assaí Atacadista', amount: -250.00, date: 'Sexta, 27 de fevereiro', icon: 'orange' },
+  { id: 37, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'UberX', amount: -18.00, date: 'Quarta, 25 de fevereiro', icon: 'orange' },
+  { id: 39, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Lanchonete Esquina', amount: -25.00, date: 'Terça, 24 de fevereiro', icon: 'orange' },
+  { id: 41, type: 'expense', title: 'Pix enviado', subtitle: 'Ana Paula', amount: -15.00, date: 'Segunda, 23 de fevereiro', icon: 'orange' },
+  TARGET_TRANSACTION,
+  { id: 48, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Droga Raia', amount: -35.00, date: 'Sexta, 20 de fevereiro', icon: 'orange' },
+];
+
+// Profile 2: Middle Class (5.000 - 20.000)
+const TRANSACTIONS_MIDDLE = [
+  { id: 1, type: 'income', title: 'Salário', subtitle: 'Empresa de Tecnologia', amount: 8000.00, date: 'Hoje', icon: 'blue' },
+  { id: 2, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Pão de Açúcar', amount: -850.00, date: 'Hoje', icon: 'orange' },
+  { id: 4, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Uber Comfort', amount: -55.00, date: 'Terça, 17 de março', icon: 'orange' },
+  { id: 5, type: 'expense', title: 'Pagamento de boleto', subtitle: 'Enel Distribuição SP', amount: -350.00, date: 'Terça, 17 de março', icon: 'orange' },
+  { id: 6, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Padaria Premium', amount: -65.00, date: 'Segunda, 16 de março', icon: 'orange' },
+  { id: 7, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'iFood', amount: -120.00, date: 'Segunda, 16 de março', icon: 'orange' },
+  { id: 8, type: 'expense', title: 'Pix enviado', subtitle: 'João da Silva', amount: -150.00, date: 'Segunda, 16 de março', icon: 'orange' },
+  { id: 10, type: 'expense', title: 'Pagamento de boleto', subtitle: 'Condomínio Jardins', amount: -2200.00, date: 'Terça, 10 de março', icon: 'orange' },
+  { id: 12, type: 'income', title: 'Pix recebido', subtitle: 'Maria Souza', amount: 500.00, date: 'Terça, 10 de março', icon: 'blue' },
+  { id: 13, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Restaurante Outback', amount: -280.00, date: 'Segunda, 9 de março', icon: 'orange' },
+  { id: 14, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Uber Comfort', amount: -60.00, date: 'Segunda, 9 de março', icon: 'orange' },
+  { id: 15, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Restaurante Madero', amount: -150.00, date: 'Sexta, 6 de março', icon: 'orange' },
+  { id: 16, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Cobasi Pet Shop', amount: -220.00, date: 'Sexta, 6 de março', icon: 'orange' },
+  { id: 17, type: 'income', title: 'Pix recebido', subtitle: 'Consultoria ME', amount: 2000.00, date: 'Quinta, 5 de março', icon: 'blue' },
+  { id: 18, type: 'expense', title: 'Debito aut. internet', subtitle: 'Vivo Fibra', amount: -150.00, date: 'Quinta, 5 de março', icon: 'orange' },
+  { id: 25, type: 'expense', title: 'Debito aut. saúde', subtitle: 'Plano Amil', amount: -800.00, date: 'Quarta, 4 de março', icon: 'orange' },
+  { id: 29, type: 'income', title: 'Pix recebido', subtitle: 'Carlos Alberto', amount: 350.00, date: 'Terça, 3 de março', icon: 'blue' },
+  { id: 30, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Posto Ipiranga', amount: -200.00, date: 'Terça, 3 de março', icon: 'orange' },
+  { id: 32, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Padaria Premium', amount: -45.00, date: 'Segunda, 2 de março', icon: 'orange' },
+  { id: 35, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Carrefour', amount: -600.00, date: 'Sexta, 27 de fevereiro', icon: 'orange' },
+  { id: 37, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Uber Comfort', amount: -48.00, date: 'Quarta, 25 de fevereiro', icon: 'orange' },
+  { id: 39, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'iFood', amount: -85.00, date: 'Terça, 24 de fevereiro', icon: 'orange' },
+  { id: 41, type: 'expense', title: 'Pix enviado', subtitle: 'Ana Paula', amount: -120.00, date: 'Segunda, 23 de fevereiro', icon: 'orange' },
+  TARGET_TRANSACTION,
+  { id: 48, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Droga Raia', amount: -180.00, date: 'Sexta, 20 de fevereiro', icon: 'orange' },
+];
+
+// Profile 3: Upper Class (> 20.000)
+const TRANSACTIONS_UPPER = [
+  { id: 1, type: 'income', title: 'Pix recebido', subtitle: 'Distribuição de Lucros', amount: 45000.00, date: 'Hoje', icon: 'blue' },
+  { id: 2, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Empório St. Marche', amount: -2500.00, date: 'Hoje', icon: 'orange' },
+  { id: 4, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Uber Black', amount: -180.00, date: 'Terça, 17 de março', icon: 'orange' },
+  { id: 5, type: 'expense', title: 'Pagamento de boleto', subtitle: 'Enel Distribuição SP', amount: -1200.00, date: 'Terça, 17 de março', icon: 'orange' },
+  { id: 6, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Padaria Artesanal Boutique', amount: -250.00, date: 'Segunda, 16 de março', icon: 'orange' },
+  { id: 7, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'iFood Fasano', amount: -450.00, date: 'Segunda, 16 de março', icon: 'orange' },
+  { id: 8, type: 'expense', title: 'Pix enviado', subtitle: 'João da Silva', amount: -1500.00, date: 'Segunda, 16 de março', icon: 'orange' },
+  { id: 10, type: 'expense', title: 'Pagamento de boleto', subtitle: 'Condomínio Alphaville', amount: -5500.00, date: 'Terça, 10 de março', icon: 'orange' },
+  { id: 12, type: 'income', title: 'Pix recebido', subtitle: 'Maria Souza', amount: 8000.00, date: 'Terça, 10 de março', icon: 'blue' },
+  { id: 13, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Restaurante D.O.M.', amount: -1800.00, date: 'Segunda, 9 de março', icon: 'orange' },
+  { id: 14, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Uber Black', amount: -150.00, date: 'Segunda, 9 de março', icon: 'orange' },
+  { id: 15, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Shopping Iguatemi', amount: -4500.00, date: 'Sexta, 6 de março', icon: 'orange' },
+  { id: 16, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Petz Estética Animal', amount: -600.00, date: 'Sexta, 6 de março', icon: 'orange' },
+  { id: 17, type: 'income', title: 'Transferência recebida', subtitle: 'Resgate de Investimentos', amount: 15000.00, date: 'Quinta, 5 de março', icon: 'blue' },
+  { id: 18, type: 'expense', title: 'Debito aut. telefone', subtitle: 'Vivo Pós Família 200GB', amount: -450.00, date: 'Quinta, 5 de março', icon: 'orange' },
+  { id: 25, type: 'expense', title: 'Debito aut. saúde', subtitle: 'Plano Care Plus', amount: -5800.00, date: 'Quarta, 4 de março', icon: 'orange' },
+  { id: 29, type: 'income', title: 'Pix recebido', subtitle: 'Carlos Alberto', amount: 3500.00, date: 'Terça, 3 de março', icon: 'blue' },
+  { id: 30, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Posto Premium', amount: -400.00, date: 'Terça, 3 de março', icon: 'orange' },
+  { id: 32, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Padaria Artesanal Boutique', amount: -180.00, date: 'Segunda, 2 de março', icon: 'orange' },
+  { id: 35, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Vinhos e Cia', amount: -3200.00, date: 'Sexta, 27 de fevereiro', icon: 'orange' },
+  { id: 37, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Uber Black', amount: -120.00, date: 'Quarta, 25 de fevereiro', icon: 'orange' },
+  { id: 39, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Apple Brasil', amount: -12500.00, date: 'Terça, 24 de fevereiro', icon: 'orange' },
+  { id: 41, type: 'expense', title: 'Pix enviado', subtitle: 'Ana Paula', amount: -2000.00, date: 'Segunda, 23 de fevereiro', icon: 'orange' },
+  TARGET_TRANSACTION,
+  { id: 48, type: 'expense', title: 'Compra cartao deb mc', subtitle: 'Clínica de Estética', amount: -1500.00, date: 'Sexta, 20 de fevereiro', icon: 'orange' },
 ];
 
 const formatCurrency = (value) => {
@@ -858,65 +896,13 @@ function App() {
   const [userTransactions, setUserTransactions] = useState([]);
 
   const profileTransactions = useMemo(() => {
-    let multiplier = 1;
-    let profile = 1;
-    
     if (balance <= 5000) {
-      multiplier = 0.8;
-      profile = 1;
+      return TRANSACTIONS_LOWER;
     } else if (balance <= 20000) {
-      multiplier = 3.5;
-      profile = 2;
+      return TRANSACTIONS_MIDDLE;
     } else {
-      multiplier = 10;
-      profile = 3;
+      return TRANSACTIONS_UPPER;
     }
-
-    return INITIAL_TRANSACTIONS.map(t => {
-      if (t.isTarget) return t; // Keep the fixed 17.700 transaction intact
-
-      let newSubtitle = t.subtitle;
-      let newTitle = t.title;
-
-      const subLower = newSubtitle.toLowerCase();
-      const titleLower = newTitle.toLowerCase();
-
-      if (profile === 3) { // Upper Class (> 20.000)
-        if (subLower.includes('panificadora') || subLower.includes('padaria')) newSubtitle = 'Padaria Artesanal Boutique';
-        if (subLower.includes('lanchonete')) newSubtitle = 'Restaurante Fasano';
-        if (subLower.includes('uber')) newSubtitle = 'Uber Black';
-        if (subLower.includes('vivo')) newSubtitle = 'Vivo Pós Família 200GB';
-        if (subLower.includes('residencial')) newSubtitle = 'Condomínio Alphaville';
-        if (subLower.includes('shopping')) newSubtitle = 'Shopping Iguatemi';
-        if (subLower.includes('bicho feliz')) newSubtitle = 'Petz Estética Animal';
-        if (subLower.includes('portoseg')) newSubtitle = 'Porto Seguro Auto Premium';
-        if (subLower.includes('facebook')) newSubtitle = 'Apple Brasil Services';
-        if (subLower.includes('victornet')) newSubtitle = 'Claro Fibra 1 Giga';
-        if (titleLower.includes('boleto')) newTitle = 'Pagamento de boleto Condomínio/Clube';
-      } else if (profile === 2) { // Middle Class (5.000 - 20.000)
-        if (subLower.includes('panificadora') || subLower.includes('padaria')) newSubtitle = 'Padaria Premium';
-        if (subLower.includes('lanchonete')) newSubtitle = 'Restaurante Outback';
-        if (subLower.includes('uber')) newSubtitle = 'Uber Comfort';
-        if (subLower.includes('vivo')) newSubtitle = 'Vivo Pós 50GB';
-        if (subLower.includes('residencial')) newSubtitle = 'Condomínio Jardins';
-        if (subLower.includes('shopping')) newSubtitle = 'Shopping Morumbi';
-        if (subLower.includes('bicho feliz')) newSubtitle = 'Cobasi Pet Shop';
-        if (subLower.includes('portoseg')) newSubtitle = 'Porto Seguro Auto';
-        if (subLower.includes('facebook')) newSubtitle = 'Amazon Prime';
-        if (subLower.includes('victornet')) newSubtitle = 'Vivo Fibra 500 Mega';
-      } else { // Lower Middle Class (< 5.000)
-        if (subLower.includes('uber')) newSubtitle = 'UberX';
-        if (subLower.includes('vivo')) newSubtitle = 'Vivo Controle';
-        if (subLower.includes('facebook')) newSubtitle = 'Netflix';
-      }
-
-      return {
-        ...t,
-        title: newTitle,
-        subtitle: newSubtitle,
-        amount: parseFloat((t.amount * multiplier).toFixed(2))
-      };
-    });
   }, [balance]);
 
   const transactions = [...userTransactions, ...profileTransactions];
