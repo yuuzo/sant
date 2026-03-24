@@ -266,6 +266,8 @@ const HomePage = ({ onNavigate, isSelectMode, onToggleMode }) => {
 const ExtratoPage = ({ onNavigate, onSelectTransaction, isSelectMode }) => {
   const [showBalance, setShowBalance] = useState(true);
   const [activeDate, setActiveDate] = useState(null);
+  const [lastUpdated, setLastUpdated] = useState('');
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const dateHeaderRefs = useRef({});
 
   // Group transactions by date
@@ -276,6 +278,20 @@ const ExtratoPage = ({ onNavigate, onSelectTransaction, isSelectMode }) => {
   }, {});
 
   const dateKeys = Object.keys(groupedTransactions);
+
+  useEffect(() => {
+    const now = new Date();
+    setLastUpdated(now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+  }, []);
+
+  const handleRefresh = () => {
+    setIsRefreshing(true);
+    setTimeout(() => {
+      const now = new Date();
+      setLastUpdated(now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+      setIsRefreshing(false);
+    }, 600);
+  };
 
   useEffect(() => {
     const handleScroll = (e) => {
@@ -363,9 +379,13 @@ const ExtratoPage = ({ onNavigate, onSelectTransaction, isSelectMode }) => {
           <button className={`${isSelectMode ? 'text-black border-black' : 'text-santander-red border-santander-red'} text-[14px] mb-8 border-b-[1px] leading-none pb-[2px]`}>Entenda seu limite</button>
           
           <div className="flex justify-between items-center text-[12px] text-gray-500 mb-2">
-            <span>Última atualização às 23:25:45</span>
-            <button className={`flex items-center gap-1.5 ${isSelectMode ? 'text-black' : 'text-santander-red'} font-medium`}>
-              <RefreshCw size={14} strokeWidth={2.5} /> Atualizar
+            <span>Última atualização às {lastUpdated}</span>
+            <button 
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className={`flex items-center gap-1.5 ${isSelectMode ? 'text-black' : 'text-santander-red'} font-medium ${isRefreshing ? 'opacity-50' : ''}`}
+            >
+              <RefreshCw size={14} strokeWidth={2.5} className={isRefreshing ? 'animate-spin' : ''} /> Atualizar
             </button>
           </div>
         </div>
