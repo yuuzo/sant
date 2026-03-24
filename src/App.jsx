@@ -39,7 +39,7 @@ import cartoesIcon from './assets/cartoes.png';
 import chatIcon from './assets/chat.png';
 
 // Mock Data
-const TRANSACTIONS = [
+const INITIAL_TRANSACTIONS = [
   { id: 1, type: 'income', title: 'Resg poup - central/internet/app', subtitle: 'De: 2045.60.015997-8', amount: 1500.00, date: 'Hoje', icon: 'blue' },
   { id: 2, type: 'expense', title: 'Compra cartao deb mc', subtitle: '18/03 99. pop 18mar 15h06', amount: -10.45, date: 'Hoje', icon: 'orange' },
   { id: 3, type: 'expense', title: 'Pagamento de boleto outros bancos', subtitle: 'Portoseg sa c financ e in', amount: -409.74, date: 'Hoje', icon: 'orange' },
@@ -86,7 +86,19 @@ const TRANSACTIONS = [
   { id: 44, type: 'expense', title: 'Pix enviado', subtitle: 'Correa silva drogaria e p', amount: -18.30, date: 'Segunda, 23 de fevereiro', icon: 'orange' },
   { id: 45, type: 'expense', title: 'Compra cartao deb mc', subtitle: '22/02 99. 99inapppaymentc', amount: -8.24, date: 'Segunda, 23 de fevereiro', icon: 'orange' },
   { id: 46, type: 'expense', title: 'Pix enviado', subtitle: 'Neide batista de souza', amount: -90.00, date: 'Segunda, 23 de fevereiro', icon: 'orange' },
-  { id: 47, type: 'expense', title: 'Pix enviado', subtitle: 'Twlf assessoria comercial', amount: -17700.00, date: 'Segunda, 23 de fevereiro', icon: 'orange', isTarget: true },
+  { 
+    id: 47, type: 'expense', title: 'Pix enviado', subtitle: 'Twlf assessoria comercial', amount: -17700.00, date: 'Segunda, 23 de fevereiro', icon: 'orange', isTarget: true,
+    fullDate: 'Sabado, 21/02/2026 às 14:29',
+    receiptDate: '21/02/2026 - 14:29:39',
+    receiverName: 'Twlf Assessoria Comercial Ltda',
+    receiverDocument: '63.***.*** /0001-1*',
+    receiverBank: 'Cartos Scd S A',
+    senderName: 'VIVIANE APARECIDA DOS SANTOS',
+    senderDocument: '***.691.138-**',
+    senderBank: '033 - BANCO SANTANDER S.A.',
+    transactionId: 'E9040088820260221172956204964399',
+    postBalance: '-R$ 59,49'
+  },
   { id: 48, type: 'expense', title: 'Compra cartao deb mc', subtitle: '20/02 stafe bank.rmp pape', amount: -39.00, date: 'Sexta, 20 de fevereiro', icon: 'orange' },
 ];
 
@@ -106,7 +118,7 @@ const HeaderIcons = () => (
 );
 
 // Components
-const HomePage = ({ onNavigate, isSelectMode, onToggleMode }) => {
+const HomePage = ({ onNavigate, isSelectMode, onToggleMode, balance }) => {
   const [showBalance, setShowBalance] = useState(false);
 
   return (
@@ -119,7 +131,9 @@ const HomePage = ({ onNavigate, isSelectMode, onToggleMode }) => {
         {/* Top Header Icons */}
         <div className="flex justify-between items-center px-4 mb-6">
           <div className="flex items-center gap-4">
-            <Menu size={32} strokeWidth={1.5} />
+            <button onClick={() => onNavigate('admin')} className="p-1 -ml-1">
+              <Menu size={32} strokeWidth={1.5} />
+            </button>
             <div className="flex items-center mt-1" onClick={onToggleMode}>
               <img 
                 src={isSelectMode ? santanderSelectLogo : santanderLogo} 
@@ -150,13 +164,13 @@ const HomePage = ({ onNavigate, isSelectMode, onToggleMode }) => {
           </div>
           <div className="text-[28px] font-bold mb-1 tracking-tight flex items-center justify-center min-h-[42px]">
             {showBalance ? (
-              'R$ 1.250,00'
+              balance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
             ) : (
-              <span className="text-[28px] blur-[6px] select-none opacity-80">R$ 1.250,00</span>
+              <span className="text-[28px] blur-[6px] select-none opacity-80">{balance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
             )}
           </div>
           <div className="text-[12px] mb-5 font-medium opacity-90">
-            Saldo + limite R$ 1.350,00
+            Saldo + limite {(balance + 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
           </div>
           <button 
             onClick={() => onNavigate('extrato')}
@@ -263,7 +277,7 @@ const HomePage = ({ onNavigate, isSelectMode, onToggleMode }) => {
   );
 };
 
-const ExtratoPage = ({ onNavigate, onSelectTransaction, isSelectMode }) => {
+const ExtratoPage = ({ onNavigate, onSelectTransaction, isSelectMode, balance, transactions }) => {
   const [showBalance, setShowBalance] = useState(true);
   const [activeDate, setActiveDate] = useState(null);
   const [lastUpdated, setLastUpdated] = useState('');
@@ -271,7 +285,7 @@ const ExtratoPage = ({ onNavigate, onSelectTransaction, isSelectMode }) => {
   const dateHeaderRefs = useRef({});
 
   // Group transactions by date
-  const groupedTransactions = TRANSACTIONS.reduce((acc, curr) => {
+  const groupedTransactions = transactions.reduce((acc, curr) => {
     if (!acc[curr.date]) acc[curr.date] = [];
     acc[curr.date].push(curr);
     return acc;
@@ -365,9 +379,9 @@ const ExtratoPage = ({ onNavigate, onSelectTransaction, isSelectMode }) => {
           <div className="flex justify-between items-center mb-6">
             <span className="text-[28px] font-bold text-gray-900 tracking-tight flex items-center min-h-[42px]">
               {showBalance ? (
-                'R$ 1.250,00'
+                balance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
               ) : (
-                <span className="text-[28px] blur-[6px] select-none opacity-80 text-gray-900">R$ 1.250,00</span>
+                <span className="text-[28px] blur-[6px] select-none opacity-80 text-gray-900">{balance.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
               )}
             </span>
             <button onClick={() => setShowBalance(!showBalance)}>
@@ -375,7 +389,7 @@ const ExtratoPage = ({ onNavigate, onSelectTransaction, isSelectMode }) => {
             </button>
           </div>
           <hr className="mb-4 border-gray-200" />
-          <p className="text-[14px] text-gray-700 mb-2">Saldo + Limite: R$ 1.350,00</p>
+          <p className="text-[14px] text-gray-700 mb-2">Saldo + Limite: {(balance + 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</p>
           <button className={`${isSelectMode ? 'text-black border-black' : 'text-santander-red border-santander-red'} text-[14px] mb-8 border-b-[1px] leading-none pb-[2px]`}>Entenda seu limite</button>
           
           <div className="flex justify-between items-center text-[12px] text-gray-500 mb-2">
@@ -442,6 +456,8 @@ const ExtratoPage = ({ onNavigate, onSelectTransaction, isSelectMode }) => {
 };
 
 const DetailPage = ({ transaction, onNavigate, isSelectMode }) => {
+  if (!transaction) return null;
+
   return (
     <div className="flex flex-col h-full bg-white font-sans">
       {/* Header */}
@@ -457,24 +473,26 @@ const DetailPage = ({ transaction, onNavigate, isSelectMode }) => {
       </div>
 
       <div className="flex-1 p-6 py-10">
-        <p className="text-[14px] font-medium text-gray-500 mb-2">Pix enviado</p>
+        <p className="text-[14px] font-medium text-gray-500 mb-2">{transaction.title}</p>
         <p className="text-[18px] font-medium text-gray-600 mb-1 leading-tight">
-          Para <span className="font-bold text-gray-900">Twlf Assessoria Comer</span>
+          {transaction.amount < 0 ? 'Para ' : 'De '}<span className="font-bold text-gray-900">{transaction.subtitle}</span>
         </p>
-        <p className="text-[40px] font-bold text-gray-900 mb-6 tracking-tighter">-R$ 17.700,00</p>
-        <p className="text-[14px] font-bold text-gray-800 mb-10">Cartos Scd S A</p>
+        <p className="text-[40px] font-bold text-gray-900 mb-6 tracking-tighter">
+          {transaction.amount < 0 ? '-R$' : 'R$'} {Math.abs(transaction.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+        </p>
+        <p className="text-[14px] font-bold text-gray-800 mb-10">{transaction.receiverBank || 'Banco'}</p>
 
         <hr className="mb-8 border-gray-200" />
 
         <div className="space-y-8">
           <div>
             <p className="text-[13px] font-medium text-gray-500 mb-1">Data e horário</p>
-            <p className="text-[16px] font-semibold text-gray-800">Sabado, 21/02/2026 às 14:29</p>
+            <p className="text-[16px] font-semibold text-gray-800">{transaction.fullDate || transaction.date}</p>
           </div>
 
           <div>
             <p className="text-[13px] font-medium text-gray-500 mb-1">Saldo em conta após este lançamento</p>
-            <p className="text-[16px] font-semibold text-gray-800">-R$ 59,49</p>
+            <p className="text-[16px] font-semibold text-gray-800">{transaction.postBalance || '-R$ 59,49'}</p>
           </div>
         </div>
       </div>
@@ -491,8 +509,10 @@ const DetailPage = ({ transaction, onNavigate, isSelectMode }) => {
   );
 };
 
-const ReceiptPage = ({ onNavigate, isSelectMode }) => {
+const ReceiptPage = ({ transaction, onNavigate, isSelectMode }) => {
   const receiptRef = useRef(null);
+
+  if (!transaction) return null;
 
   const handleShare = async () => {
     if (!receiptRef.current) return;
@@ -550,14 +570,16 @@ const ReceiptPage = ({ onNavigate, isSelectMode }) => {
             className={`${isSelectMode ? 'h-[28px]' : 'h-[26px]'} object-contain mb-4`} 
             style={isSelectMode ? { filter: 'invert(100%)' } : { filter: 'brightness(0) saturate(100%) invert(12%) sepia(95%) saturate(7482%) hue-rotate(359deg) brightness(94%) contrast(117%)' }} 
           />
-          <p className="text-[17px] font-bold text-gray-800 tracking-tight mb-1">Comprovante do Pix</p>
-          <p className="text-[11px] font-medium text-gray-400">21/02/2026 - 14:29:39</p>
+          <p className="text-[17px] font-bold text-gray-800 tracking-tight mb-1">Comprovante de transação</p>
+          <p className="text-[11px] font-medium text-gray-400">{transaction.receiptDate || transaction.date}</p>
         </div>
 
         <div className="space-y-6 px-1">
           <div className="border-b border-gray-100 pb-5">
-            <p className="text-[12px] font-medium text-gray-500 mb-1">Valor pago</p>
-            <p className="text-[16px] font-bold text-gray-800">R$ 17.700,00</p>
+            <p className="text-[12px] font-medium text-gray-500 mb-1">Valor</p>
+            <p className="text-[16px] font-bold text-gray-800">
+              R$ {Math.abs(transaction.amount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            </p>
           </div>
 
           <div className="border-b border-gray-100 pb-5">
@@ -570,18 +592,15 @@ const ReceiptPage = ({ onNavigate, isSelectMode }) => {
             <div className="space-y-4">
               <div>
                 <p className="text-[12px] font-medium text-gray-500 mb-0.5">Para</p>
-                <p className="text-[14px] font-bold text-gray-800">Twlf Assessoria Comercial Ltda</p>
+                <p className="text-[14px] font-bold text-gray-800">{transaction.receiverName || transaction.subtitle}</p>
               </div>
               <div>
-                <p className="text-[12px] font-medium text-gray-500 mb-0.5">CNPJ</p>
-                <p className="text-[14px] font-semibold text-gray-800">63.***.*** /0001-1*</p>
-              </div>
-              <div>
-                <p className="text-[12px] font-medium text-gray-500 mb-0.5">Chave</p>
-                <p className="text-[14px] font-semibold text-gray-800">63.***.*** /0001-1*</p>
+                <p className="text-[12px] font-medium text-gray-500 mb-0.5">CPF/CNPJ</p>
+                <p className="text-[14px] font-semibold text-gray-800">{transaction.receiverDocument || '***.***.***-**'}</p>
               </div>
               <div className="border-b border-gray-100 pb-5">
                 <p className="text-[12px] font-medium text-gray-500 mb-0.5">Instituição</p>
+                <p className="text-[14px] font-semibold text-gray-800">{transaction.receiverBank || 'Banco'}</p>
               </div>
             </div>
           </div>
@@ -591,33 +610,240 @@ const ReceiptPage = ({ onNavigate, isSelectMode }) => {
             <div className="space-y-4">
               <div>
                 <p className="text-[12px] font-medium text-gray-500 mb-0.5">De</p>
-                <p className="text-[14px] font-bold text-gray-800 uppercase">VIVIANE APARECIDA DOS SANTOS</p>
+                <p className="text-[14px] font-bold text-gray-800 uppercase">{transaction.senderName || 'USUARIO DA SILVA'}</p>
               </div>
               <div>
                 <p className="text-[12px] font-medium text-gray-500 mb-0.5">CPF</p>
-                <p className="text-[14px] font-semibold text-gray-800">***.691.138-**</p>
+                <p className="text-[14px] font-semibold text-gray-800">{transaction.senderDocument || '***.000.000-**'}</p>
               </div>
               <div className="border-b border-gray-100 pb-5">
                 <p className="text-[12px] font-medium text-gray-500 mb-0.5">Instituição</p>
-                <p className="text-[14px] font-semibold text-gray-800">033 - BANCO SANTANDER S.A.</p>
+                <p className="text-[14px] font-semibold text-gray-800">{transaction.senderBank || '033 - BANCO SANTANDER S.A.'}</p>
               </div>
             </div>
           </div>
 
           <div className="border-b border-gray-100 pb-5">
             <p className="text-[12px] font-medium text-gray-500 mb-1">ID/Transação</p>
-            <p className="text-[12px] font-semibold text-gray-800 break-all leading-relaxed">E9040088820260221172956204964399</p>
+            <p className="text-[12px] font-semibold text-gray-800 break-all leading-relaxed">{transaction.transactionId || 'E0000000000000000000000000000000'}</p>
           </div>
 
           <div className="border-b border-gray-100 pb-5">
             <p className="text-[12px] font-medium text-gray-500 mb-1">Data e hora da transação</p>
-            <p className="text-[14px] font-semibold text-gray-800">21/02/2026 - 14:29:39</p>
+            <p className="text-[14px] font-semibold text-gray-800">{transaction.receiptDate || transaction.date}</p>
           </div>
         </div>
 
         <div className="mt-12 flex justify-between text-[11px] font-medium text-gray-400 border-t border-gray-100 pt-6 mb-8">
-          <span>Comprovante do Pix</span>
-          <span>1/2</span>
+          <span>Comprovante</span>
+          <span>1/1</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const AdminPage = ({ currentBalance, onUpdateBalance, onAddTransaction, onNavigate, isSelectMode }) => {
+  const [balanceInput, setBalanceInput] = useState(currentBalance.toString());
+  
+  // Transaction Form State
+  const [type, setType] = useState('expense');
+  const [title, setTitle] = useState('Pix enviado');
+  const [subtitle, setSubtitle] = useState('');
+  const [amount, setAmount] = useState('');
+  const [date, setDate] = useState('Hoje');
+  const [receiverName, setReceiverName] = useState('');
+  const [receiverDocument, setReceiverDocument] = useState('');
+  const [receiverBank, setReceiverBank] = useState('');
+  const [senderName, setSenderName] = useState('');
+  const [senderDocument, setSenderDocument] = useState('');
+  const [senderBank, setSenderBank] = useState('');
+
+  const handleSaveBalance = () => {
+    onUpdateBalance(parseFloat(balanceInput));
+    alert('Saldo atualizado!');
+  };
+
+  const generateRandomDoc = () => `***.${Math.floor(Math.random()*900)+100}.${Math.floor(Math.random()*900)+100}-**`;
+  const generateRandomId = () => `E${Math.random().toString(36).substring(2, 15).toUpperCase()}${Date.now()}`;
+
+  const handleAddTransaction = () => {
+    if (!amount || isNaN(amount)) {
+      alert('Digite um valor válido');
+      return;
+    }
+
+    const now = new Date();
+    const formattedTime = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const formattedDate = now.toLocaleDateString('pt-BR');
+    const fullDate = `${date === 'Hoje' ? 'Hoje' : date}, ${formattedDate} às ${formattedTime.slice(0, 5)}`;
+    const receiptDate = `${formattedDate} - ${formattedTime}`;
+
+    const parsedAmount = parseFloat(amount);
+    const finalAmount = type === 'expense' ? -Math.abs(parsedAmount) : Math.abs(parsedAmount);
+
+    const newTransaction = {
+      id: Date.now(),
+      type,
+      title: title || (type === 'expense' ? 'Pix enviado' : 'Pix recebido'),
+      subtitle: subtitle || receiverName || 'Transferência',
+      amount: finalAmount,
+      date: date || 'Hoje',
+      icon: type === 'expense' ? 'orange' : 'blue',
+      isTarget: true,
+      fullDate,
+      receiptDate,
+      receiverName: receiverName || 'Nome do Recebedor',
+      receiverDocument: receiverDocument || generateRandomDoc(),
+      receiverBank: receiverBank || 'Banco do Recebedor',
+      senderName: senderName || 'SEU NOME AQUI',
+      senderDocument: senderDocument || generateRandomDoc(),
+      senderBank: senderBank || '033 - BANCO SANTANDER S.A.',
+      transactionId: generateRandomId(),
+      postBalance: (parseFloat(currentBalance) + finalAmount).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+    };
+
+    onAddTransaction(newTransaction);
+    alert('Transação criada com sucesso!');
+    onNavigate('home');
+  };
+
+  return (
+    <div className="flex flex-col h-full bg-[#f0f2f5] font-sans">
+      <div className={`${isSelectMode ? 'bg-black' : 'bg-santander-red'} text-white`}>
+        <div className="h-10"></div>
+        <div className="px-4 py-2 flex justify-between items-center">
+          <button onClick={() => onNavigate('home')} className="p-1 -ml-2">
+            <ChevronLeft size={36} strokeWidth={2.5} />
+          </button>
+          <span className="text-xl font-bold tracking-tight">Painel Admin</span>
+          <div className="w-8"></div>
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto p-5">
+        <div className="bg-white rounded-xl p-5 shadow-sm mb-6">
+          <h2 className="text-lg font-bold mb-4">1. Alterar Saldo</h2>
+          <div className="flex gap-3">
+            <input 
+              type="number" 
+              value={balanceInput}
+              onChange={(e) => setBalanceInput(e.target.value)}
+              className="border border-gray-300 rounded-lg px-3 py-2 flex-1 outline-none"
+              placeholder="Ex: 1500.50"
+            />
+            <button 
+              onClick={handleSaveBalance}
+              className={`${isSelectMode ? 'bg-black' : 'bg-santander-red'} text-white px-4 py-2 rounded-lg font-bold`}
+            >
+              Salvar
+            </button>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-xl p-5 shadow-sm">
+          <h2 className="text-lg font-bold mb-4">2. Criar Transação</h2>
+          <p className="text-sm text-gray-500 mb-4">Campos vazios serão gerados automaticamente.</p>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de Transação</label>
+              <select 
+                value={type} 
+                onChange={(e) => setType(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none bg-white"
+              >
+                <option value="expense">Enviado (Gasto/Pix Enviado)</option>
+                <option value="income">Recebido (Ganho/Pix Recebido)</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Valor (R$)</label>
+              <input 
+                type="number" 
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
+                placeholder="Ex: 150.00"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Título (Ex: Pix enviado)</label>
+              <input 
+                type="text" 
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Subtítulo (Aparece na lista)</label>
+              <input 
+                type="text" 
+                value={subtitle}
+                onChange={(e) => setSubtitle(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
+                placeholder="Ex: Nome da pessoa"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Data (Agrupamento)</label>
+              <input 
+                type="text" 
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
+                placeholder="Ex: Hoje ou Segunda, 23 de fevereiro"
+              />
+            </div>
+
+            <hr className="my-4 border-gray-200" />
+            <h3 className="font-semibold text-gray-800">Dados do Recebedor</h3>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nome (Para)</label>
+              <input 
+                type="text" 
+                value={receiverName}
+                onChange={(e) => setReceiverName(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Banco</label>
+              <input 
+                type="text" 
+                value={receiverBank}
+                onChange={(e) => setReceiverBank(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
+              />
+            </div>
+
+            <hr className="my-4 border-gray-200" />
+            <h3 className="font-semibold text-gray-800">Dados do Pagador (Seu app)</h3>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Seu Nome (De)</label>
+              <input 
+                type="text" 
+                value={senderName}
+                onChange={(e) => setSenderName(e.target.value)}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 outline-none"
+              />
+            </div>
+
+            <button 
+              onClick={handleAddTransaction}
+              className={`w-full ${isSelectMode ? 'bg-black' : 'bg-santander-red'} text-white py-3 rounded-xl font-bold mt-4`}
+            >
+              Criar Transação
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -628,6 +854,8 @@ function App() {
   const [currentPage, setCurrentPage] = useState('home');
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [isSelectMode, setIsSelectMode] = useState(false);
+  const [balance, setBalance] = useState(1250.00);
+  const [transactions, setTransactions] = useState(INITIAL_TRANSACTIONS);
 
   const handleNavigate = (page) => {
     setCurrentPage(page);
@@ -642,6 +870,14 @@ function App() {
 
   const toggleSelectMode = () => {
     setIsSelectMode(!isSelectMode);
+  };
+
+  const handleUpdateBalance = (newBalance) => {
+    setBalance(parseFloat(newBalance));
+  };
+
+  const handleAddTransaction = (newTransaction) => {
+    setTransactions([newTransaction, ...transactions]);
   };
 
   return (
@@ -660,6 +896,7 @@ function App() {
               onNavigate={handleNavigate} 
               isSelectMode={isSelectMode} 
               onToggleMode={toggleSelectMode} 
+              balance={balance}
             />
           </motion.div>
         )}
@@ -676,6 +913,8 @@ function App() {
               onNavigate={handleNavigate} 
               onSelectTransaction={handleSelectTransaction}
               isSelectMode={isSelectMode}
+              balance={balance}
+              transactions={transactions}
             />
           </motion.div>
         )}
@@ -705,7 +944,26 @@ function App() {
             className="h-full w-full absolute top-0 left-0"
           >
             <ReceiptPage 
+              transaction={selectedTransaction}
               onNavigate={handleNavigate} 
+              isSelectMode={isSelectMode}
+            />
+          </motion.div>
+        )}
+        {currentPage === 'admin' && (
+          <motion.div
+            key="admin"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="h-full w-full absolute top-0 left-0"
+          >
+            <AdminPage 
+              currentBalance={balance}
+              onUpdateBalance={handleUpdateBalance}
+              onAddTransaction={handleAddTransaction}
+              onNavigate={handleNavigate}
               isSelectMode={isSelectMode}
             />
           </motion.div>
